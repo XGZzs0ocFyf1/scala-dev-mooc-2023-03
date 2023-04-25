@@ -219,7 +219,7 @@ object opt {
   def printIfAny[T](v: Option[T]): Unit = {
     v match {
       case Option.Some(v) => println(v)
-      case Option.None => ()
+      case Option.None =>
     }
   }
 
@@ -239,8 +239,8 @@ object opt {
    * Реализовать метод filter, который будет возвращать не пустой Option
    * в случае если исходный не пуст и предикат от значения = true
    */
-  def filter[T](in: Option[T], predicate: Boolean): Option[T] = {
-    if (predicate) in.flatMap(x => Option.Some(x)) else Option.None
+  def filter[T](in: Option[T], predicate: Option[T] => Boolean): Option[T] = {
+    if (predicate(in)) in.flatMap(x => Option.Some(x)) else Option.None
   }
 
 }
