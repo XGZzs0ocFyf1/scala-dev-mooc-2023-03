@@ -1,7 +1,7 @@
 package scala3_1
 
 
-/*
+
 //1. исполользовать given, как написано в комментариях и в почеченных местах ниже
 //2. использовать новый "тихий синтаксис", где сочтете приемлемым, тут на ваше усмотрение
 //https://docs.scala-lang.org/scala3/new-in-scala3.html  глава New & Shiny: The Syntax
@@ -35,17 +35,24 @@ trait FieldConversion[A,B]:
   def convert(x: A): B
 
 given intFieldConversion: FieldConversion[String,Int] with
-  def convert(x: String): Int = ???
+  def convert(x: String): Int = x.toInt
 // сделать given instance для типов Int Float Double
 // в функции просто сконвертнуть строку в нужный тип
+
+given floatFieldConversion: FieldConversion[String, Float] with
+  def convert(x: String): Float = x.toFloat
+
+
+given doubleFieldConversion: FieldConversion[String,Double ] with
+  def convert(x: String): Double = x.toDouble
 
 object TestExecution{
 
   //здесь написать функцию, которая будет применять given определенные выше
   // использовать using fieldConversion c первым параметром String, а второй будет вариативны параметр B
 
-  def parse[String,B](x:String)(?????????) : B =
-    ...вызвать собственнь функцию из трейта FieldConversion...
+  def parse[String,B](x:String)(using y: FieldConversion[String, B]) : B = y.convert(x)
+  // ...вызвать собственнь функцию из трейта FieldConversion...
 
 
   def main(args: Array[String]): Unit = {
@@ -59,9 +66,11 @@ object TestExecution{
           (str, "")
       }
 
-    def IntField =  ??? //StringField.map(...здесь применить parse который подхватит нужный given автоматически ...)
-    def FloatField = ???
-    def BooleanField =???
+
+
+    def IntField: MonadParser[Int, String] =  StringField.map(_.toInt) //StringField.map(...здесь применить parse который подхватит нужный given автоматически ...)
+    def FloatField = StringField.map(_.toFloat)
+    def BooleanField = StringField.map(_.toBoolean)
 
     case class Car(year: Int, mark: String, model: String, comment: String, price: Float)
 
@@ -81,4 +90,4 @@ object TestExecution{
 
     println(result.map(x=>s"${x.model},${x.mark},${x.year}").mkString(";"))
   }
-}*/
+}
