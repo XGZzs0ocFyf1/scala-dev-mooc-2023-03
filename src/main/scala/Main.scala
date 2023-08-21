@@ -9,6 +9,9 @@ import scala.language.postfixOps
 import scala.util.Try
 import module3.functional_effects.functionalProgram.executableEncoding
 import module3.functional_effects.functionalProgram.declarativeEncoding
+import module3.zioDS.ref.{updateCounter, updateCounterRef}
+import module3.{multipleErrors, toyModel, zioConcurrency, zioConstructors, zioRecursion}
+import zio.{ExitCode, URIO, ZIO}
 
 object Main {
 
@@ -87,7 +90,24 @@ object Main {
 
  //   implicit_scopes.result
 
-    val r = declarativeEncoding.interpret(declarativeEncoding.p1)
+ //   val r = declarativeEncoding.interpret(declarativeEncoding.p1)
 
+  //  zio.Runtime.default.unsafeRun(zioConstructors.z11)
+
+
+    val eff = ZIO.effect{
+      println("1")
+
+    }.flatMap(_ => ZIO.effect(println("2")))
+
+    val c = updateCounter
+    zio.Runtime.default.unsafeRun(c.map(println))
+
+  //  Thread.sleep(2000)
+ //   println(zioRecursion.factorial(10000))
   }
+}
+
+object Main2 extends zio.App{
+  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = zioConstructors.z11.exitCode
 }
